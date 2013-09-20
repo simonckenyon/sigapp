@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<app name="resume">
+    <theme name="wiki" />
+    <section name="intro" title="INTRODUCTION" type="wiki">
+        <url>intro.html</url>
+	</section>
+    <section name="highlights" title="CAREER HIGHLIGHTS" type="wiki">
+        <url>highlights.html</url>
+	</section>
+    <section name="qualifications" title="QUALIFICATIONS" type="wiki">
+        <url>qualifications.html</url>
+	</section>
+    <section name="contact" title="CONTACT DETAILS" type="wiki">
+        <url>contact.html</url>
+	</section>
+    <section name="skills" title="SKILLS" type="wiki">
+        <url>skills.html</url>
+	</section>
+    <section name="experience" title="EXPERIENCE" type="wiki">
+        <url>experience.html</url>
+	</section>
+</app>
