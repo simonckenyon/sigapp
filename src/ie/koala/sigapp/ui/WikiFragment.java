@@ -9,8 +9,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 import ie.koala.sigapp.R;
-import ie.koala.sigapp.R.layout;
 import ie.koala.sigapp.util.GlobalObjects;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.res.AssetManager;
 import android.net.Uri;
@@ -20,7 +20,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass. Activities that
@@ -31,19 +37,18 @@ import android.webkit.WebView;
  * 
  */
 public class WikiFragment extends Fragment {
-	
+
 	private final static String TAG = WikiFragment.class.getSimpleName();
-	
+
 	/**
-	 * The fragment argument representing the section number for this
-	 * fragment.
+	 * The fragment argument representing the section number for this fragment.
 	 */
 	public static final String ARG_SECTION_NUMBER = "section_number";
 
 	private OnFragmentInteractionListener mListener;
-	
+
 	WebView wiki;
-	
+
 	int position;
 
 	/**
@@ -52,7 +57,7 @@ public class WikiFragment extends Fragment {
 	 * 
 	 * @param position
 	 *            Tab position of this wiki instance.
-     *
+	 * 
 	 * @return A new instance of fragment WikiFragment.
 	 */
 	// TODO: Rename and change types and number of parameters
@@ -72,39 +77,93 @@ public class WikiFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		if (getArguments() != null) {
-			position = (int)getArguments().getLong(ARG_SECTION_NUMBER);
+			position = (int) getArguments().getLong(ARG_SECTION_NUMBER);
 		}
 	}
 
+	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view;
-		
+		final Activity activity;
+
+		activity = getActivity();
+		// activity.getWindow().requestFeature(Window.FEATURE_PROGRESS);
 		// Inflate the layout for this fragment
 		view = inflater.inflate(R.layout.fragment_wiki, container, false);
 		wiki = (WebView) view.findViewById(R.id.wiki);
-		try {
-			AssetManager am = getResources().getAssets();
-			String url = GlobalObjects.app.getSectionAt(position).getUrl();
-			Log.d(TAG, "url=" + url);
-			InputStream in_s = am.open(url);
-			Writer writer = new StringWriter();
-			char[] buffer = new char[2048];
-			try {
-				Reader reader = new BufferedReader(new InputStreamReader(in_s,
-						"UTF-8"));
-				int n;
-				while ((n = reader.read(buffer)) != -1) {
-					writer.write(buffer, 0, n);
-				}
-			} finally {
-				in_s.close();
+		WebSettings webSettings = wiki.getSettings();
+		webSettings.setJavaScriptEnabled(true);
+		wiki.setWebChromeClient(new WebChromeClient() {
+			@Override
+			public void onProgressChanged(WebView view, int progress) {
+				// Activities and WebViews measure progress with different
+				// scales.
+				// The progress meter will automatically disappear when we reach
+				// 100%
+				activity.setProgress(progress * 1000);
 			}
-			wiki.loadData(writer.toString(), "text/html", "");
-		} catch (IOException e) {
-			wiki.loadData("Error: can't show help. [IOException]",
-					"text/html", "");
+		});
+		wiki.setWebViewClient(new WebViewClient() {
+			@Override
+			public void onReceivedError(WebView view, int errorCode,
+					String description, String failingUrl) {
+				Toast.makeText(activity, "Oh no! " + description,
+						Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public boolean shouldOverrideUrlLoading(WebView view, String url) {
+				Log.d(TAG, "shouldOverrideUrlLoading(): url=" + url);
+				return false;
+			}
+
+			@Override
+			public WebResourceResponse shouldInterceptRequest(WebView view,
+					String url) {
+				Log.d(TAG, "shouldInterceptRequest(): url=" + url);
+				
+				// remove "assets://" from beginning of url
+				String fileName = url.substring(9);
+				String mimeType;
+				if (fileName.endsWith("png")) {
+					mimeType = "image/png";
+				} else if (fileName.endsWith("jpg")) {
+					mimeType = "image/jpeg";
+				} else if (fileName.endsWith("html")) {
+					mimeType = "text/html";
+				} else if (fileName.endsWith("js")) {
+					mimeType = "text/javascript";
+				} else if (fileName.endsWith("css")) {
+					mimeType = "text/css";
+				} else {
+					mimeType = "";
+				}
+				Log.d(TAG, "shouldInterceptRequest(): fileName=" + fileName);
+				AssetManager am = getResources().getAssets();
+				InputStream in_s;
+				try {
+					in_s = am.open(fileName);
+					String encoding = "UTF-8";
+					WebResourceResponse response = new WebResourceResponse(
+							mimeType, encoding, in_s);
+					return response;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+
+			@Override
+			public void onLoadResource(WebView view, String url) {
+				Log.d(TAG, "onLoadResource(): url=" + url);
+			}
+		});
+		try {
+			String url = GlobalObjects.app.getSectionAt(position).getUrl();
+			Log.d(TAG, "onCreateView(): url=" + url);
+			wiki.loadUrl("assets://" + url);
 		} catch (Exception e) {
 			wiki.loadData("Error: can't show help. [Exception]", "text/html",
 					"");

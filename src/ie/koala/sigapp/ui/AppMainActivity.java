@@ -56,9 +56,10 @@ public class AppMainActivity extends FragmentActivity implements
 
 		try {
 			AssetManager am = getResources().getAssets();
-			InputStream in_s = am.open("app.xml");
+			InputStream in_s = am.open("app/app.xml");
 			Parser parser = new Parser();
 			parser.parseDocument(in_s);
+			Log.d(TAG, "xml parsed");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
