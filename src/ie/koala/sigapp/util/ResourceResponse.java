@@ -26,63 +26,65 @@ public class ResourceResponse {
 	public static WebResourceResponse response(String url, AssetManager am) {
 		Log.d(TAG, "shouldInterceptRequest(): fileName=" + url);
 		String mimeType;
-		boolean wiki = false;
 
-		// remove "assets://" from beginning of url
-		String fileName = url.substring(9);
+		String fileName = getFileName(url);
 		Log.d(TAG, "fileName=" + fileName);
 
-		if (fileName.endsWith("png")) {
-			mimeType = "image/png";
-		} else if (fileName.endsWith("jpg")) {
-			mimeType = "image/jpeg";
-		} else if (fileName.endsWith("html")) {
-			mimeType = "text/html";
-		} else if (fileName.endsWith("wiki")) {
-			mimeType = "text/html";
-			wiki = true;
-		} else if (fileName.endsWith("js")) {
-			mimeType = "text/javascript";
-		} else if (fileName.endsWith("css")) {
-			mimeType = "text/css";
-		} else {
-			mimeType = "";
-		}
+		mimeType = getMimeType(fileName);
+		Log.d(TAG, "mimeType=" + mimeType);
 
-		if (wiki) {
-			InputStream in_s;
-			InputStream out_s;
-			try {
-				in_s = am.open(fileName);
-				String encoding = "UTF-8";
-				WikiModel wikiModel = new WikiModel(
-						"assets://app/images/${image}",
-						"assets://app/wiki/${title}.wiki");
-				String wikiStr = getStringFromInputStream(in_s);
-				Log.d(TAG, "wikiStr=" + wikiStr);
-				String htmlStr = wikiModel.render(wikiStr);
-				Log.d(TAG, "htmlStr=" + htmlStr);
-				out_s = new ByteArrayInputStream(htmlStr.getBytes(encoding));
-				WebResourceResponse response = new WebResourceResponse(
-						mimeType, encoding, out_s);
-				return response;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
+		if (fileName.endsWith("wiki")) {
+			return textResponse(fileName, mimeType, am);
 		} else {
-			InputStream in_s;
-			try {
-				in_s = am.open(fileName);
-				String encoding = "UTF-8";
-				WebResourceResponse response = new WebResourceResponse(
-						mimeType, encoding, in_s);
-				return response;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			return null;
+			return binaryResponse(fileName, mimeType, am);
 		}
+	}
+
+	private static String getFileName(String url) {
+		// remove "assets://" from beginning of url
+		return url.substring(9);
+	}
+
+	private static String getMimeType(String fileName) {
+		if (fileName.endsWith("png")) {
+			return "image/png";
+		} else if (fileName.endsWith("jpg")) {
+			return "image/jpeg";
+		} else if (fileName.endsWith("html")) {
+			return "text/html";
+		} else if (fileName.endsWith("wiki")) {
+			return "text/html";
+		} else if (fileName.endsWith("js")) {
+			return "text/javascript";
+		} else if (fileName.endsWith("css")) {
+			return "text/css";
+		} else {
+			return "";
+		}
+	}
+
+	private static WebResourceResponse textResponse(String fileName,
+			String mimeType, AssetManager am) {
+		InputStream in_s;
+		InputStream out_s;
+		try {
+			in_s = am.open(fileName);
+			String encoding = "UTF-8";
+			WikiModel wikiModel = new WikiModel(
+					"assets://app/images/${image}",
+					"assets://app/wiki/${title}.wiki");
+			String wikiStr = getStringFromInputStream(in_s);
+			Log.d(TAG, "wikiStr=" + wikiStr);
+			String htmlStr = wikiModel.render(wikiStr);
+			Log.d(TAG, "htmlStr=" + htmlStr);
+			out_s = new ByteArrayInputStream(htmlStr.getBytes(encoding));
+			WebResourceResponse response = new WebResourceResponse(mimeType,
+					encoding, out_s);
+			return response;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	// convert InputStream to String
@@ -110,6 +112,21 @@ public class ResourceResponse {
 			}
 		}
 		return sb.toString();
+	}
+
+	private static WebResourceResponse binaryResponse(String fileName,
+			String mimeType, AssetManager am) {
+		InputStream in_s;
+		try {
+			in_s = am.open(fileName);
+			String encoding = "UTF-8";
+			WebResourceResponse response = new WebResourceResponse(mimeType,
+					encoding, in_s);
+			return response;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }
