@@ -315,5 +315,7 @@ public class AppMainActivity extends FragmentActivity implements
 		}
 	};
 
-
+	void setPage(int position) {
+		pager.setCurrentItem(position);
+	}
 }
