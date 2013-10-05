@@ -1,0 +1,37 @@
+Analysis and Design
+
+* Enterprise, Solution and Technical Architecture
+* Network, Infrastructure and Application Analysis and Design
+* Industry, IT Risk and Security Analysis
+* Object Oriented Analysis and Design
+* Patterns/Gang of Four
+* SOA
+* TOGAF, RUP and ITIL
+
+Development
+
+* Android (Fragments, ActionBarSherlock, Maps, Web Services)
+* Java, PHP, C/C++, Prolog
+* Groovy on Grails, Ruby on Rails
+* MacOS, Windows, Unix/Linux
+* Apache, Oracle/MySQL/SQL
+* Spring, Hibernate, Struts, JSP, HTML, CSS, XML, JQuery
+* Eclipse, NetBeans, Microsoft Office/Project/Visio
+* AWS and Cloud Foundry
+
+Industries
+
+* Oil &amp; Gas Software
+* Biometric Identity Management
+* Financial Services
+* Smart Cards
+
+Project Management
+
+* Agile Project Management (SCRUM)
+* Project Management
+* Department Lead
+* Design Team Lead
+* Implementation Team Lead
+* Infrastructure Implementation
+* Performance Assurance

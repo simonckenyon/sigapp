@@ -12,6 +12,8 @@ public class Section {
 	String title;
 	SectionType type;
 	String url;
+	String image;
+	String video;
 	
 	/**
 	 * @return the name
@@ -60,5 +62,29 @@ public class Section {
 	 */
 	public void setUrl(String url) {
 		this.url = url;
+	}
+	/**
+	 * @return the image
+	 */
+	public String getImage() {
+		return image;
+	}
+	/**
+	 * @param image the image to set
+	 */
+	public void setImage(String image) {
+		this.image = image;
+	}
+	/**
+	 * @return the video
+	 */
+	public String getVideo() {
+		return video;
+	}
+	/**
+	 * @param video the video to set
+	 */
+	public void setVideo(String video) {
+		this.video = video;
 	}
 }

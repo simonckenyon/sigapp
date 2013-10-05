@@ -74,6 +74,10 @@ public class Parser extends DefaultHandler {
 			section.setType(attributes.getValue("type"));
 		} else if (qName.equalsIgnoreCase("url")) {
 			Log.d(TAG, "found start of url");
+		} else if (qName.equalsIgnoreCase("image")) {
+			Log.d(TAG, "found start of image");
+		} else if (qName.equalsIgnoreCase("video")) {
+			Log.d(TAG, "found start of video");
 		}
 	}
 
@@ -97,6 +101,12 @@ public class Parser extends DefaultHandler {
 		} else if (qName.equalsIgnoreCase("url")) {
 			section.setUrl(s);
 			Log.d(TAG, "url=\"" + s + "\"");
+		} else if (qName.equalsIgnoreCase("image")) {
+			section.setImage(s);
+			Log.d(TAG, "image=\"" + s + "\"");
+		} else if (qName.equalsIgnoreCase("video")) {
+			section.setVideo(s);
+			Log.d(TAG, "video=\"" + s + "\"");
 		}
 	}
 }

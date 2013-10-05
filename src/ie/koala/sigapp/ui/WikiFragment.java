@@ -1,32 +1,34 @@
 package ie.koala.sigapp.ui;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
 
 import ie.koala.sigapp.R;
 import ie.koala.sigapp.util.GlobalObjects;
+import ie.koala.sigapp.util.OnFragmentInteractionListener;
+import ie.koala.sigapp.util.ResourceResponse;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+import info.bliki.wiki.model.WikiModel;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass. Activities that
@@ -116,43 +118,25 @@ public class WikiFragment extends Fragment {
 			@Override
 			public boolean shouldOverrideUrlLoading(WebView view, String url) {
 				Log.d(TAG, "shouldOverrideUrlLoading(): url=" + url);
-				return false;
+				if (url.startsWith("assets://")) {
+					return false;
+				} else {
+					// Otherwise, the link is not for a page on my site, so
+					// launch another Activity that handles URLs
+					Intent intent = new Intent(Intent.ACTION_VIEW, Uri
+							.parse(url));
+					startActivity(intent);
+					return true;
+				}
 			}
 
 			@Override
 			public WebResourceResponse shouldInterceptRequest(WebView view,
 					String url) {
 				Log.d(TAG, "shouldInterceptRequest(): url=" + url);
-				
-				// remove "assets://" from beginning of url
-				String fileName = url.substring(9);
-				String mimeType;
-				if (fileName.endsWith("png")) {
-					mimeType = "image/png";
-				} else if (fileName.endsWith("jpg")) {
-					mimeType = "image/jpeg";
-				} else if (fileName.endsWith("html")) {
-					mimeType = "text/html";
-				} else if (fileName.endsWith("js")) {
-					mimeType = "text/javascript";
-				} else if (fileName.endsWith("css")) {
-					mimeType = "text/css";
-				} else {
-					mimeType = "";
-				}
-				Log.d(TAG, "shouldInterceptRequest(): fileName=" + fileName);
+
 				AssetManager am = getResources().getAssets();
-				InputStream in_s;
-				try {
-					in_s = am.open(fileName);
-					String encoding = "UTF-8";
-					WebResourceResponse response = new WebResourceResponse(
-							mimeType, encoding, in_s);
-					return response;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				return null;
+				return ResourceResponse.response(url, am);
 			}
 
 			@Override
@@ -195,18 +179,12 @@ public class WikiFragment extends Fragment {
 		mListener = null;
 	}
 
-	/**
-	 * This interface must be implemented by activities that contain this
-	 * fragment to allow an interaction in this fragment to be communicated to
-	 * the activity and potentially other fragments contained in that activity.
-	 * <p>
-	 * See the Android Training lesson <a href=
-	 * "http://developer.android.com/training/basics/fragments/communicating.html"
-	 * >Communicating with Other Fragments</a> for more information.
-	 */
-	public interface OnFragmentInteractionListener {
-		// TODO: Update argument type and name
-		public void onFragmentInteraction(Uri uri);
+	public boolean canGoBack() {
+		Log.d(TAG, "WikiFragment.canGoBack() called");
+		return wiki.canGoBack();
 	}
-
+	
+	public void goBack() {
+		wiki.goBack();
+	}
 }

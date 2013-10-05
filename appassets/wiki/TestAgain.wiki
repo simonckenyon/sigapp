@@ -1,0 +1,2 @@
+This is a simple [[Test]] wiki tag
+Here is an image tag [[Image:simon.kenyon.png|link=|Simon Kenyon]]

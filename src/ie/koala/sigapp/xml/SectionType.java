@@ -4,7 +4,8 @@ public enum SectionType {
 
 	UNKNOWN			("unknown"),
 	WIKI			("wiki"),
-	IMAGE_GALLERY	("image_gallery"),
+	HTML			("html"),
+	IMAGE			("image"),
 	VIDEO			("video");
 
 	SectionType(String id) {
@@ -29,8 +30,10 @@ public enum SectionType {
 				return "unknown";
 			case WIKI:
 				return "wiki";
-			case IMAGE_GALLERY:
-				return "image gallery";
+			case HTML:
+				return "html";
+			case IMAGE:
+				return "image";
 			case VIDEO:
 				return "video";
 		}

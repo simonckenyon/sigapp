@@ -1,0 +1,8 @@
+;mobile
+: <a href="tel:+353862400005">+353 86 240 0005</a>
+;email
+: <a href="mailto:simon@koala.ie">simon@koala.ie</a></li>
+;skype
+: <a href="skype:simonckenyon?call&video=true">simonckenyon</a></li>
+;linkedin
+: <a href="http://ie.linkedin.com/pub/simon-kenyon/0/6b2/744">http://ie.linkedin.com/pub/simon-kenyon/0/6b2/744</a></li>
