@@ -1,11 +1,13 @@
 package ie.koala.sigapp.ui;
 
-import java.io.File;
 import com.actionbarsherlock.app.SherlockFragment;
 
 import ie.koala.sigapp.skynetlabs.R;
 import ie.koala.sigapp.util.GlobalObjects;
 import ie.koala.sigapp.util.OnFragmentInteractionListener;
+import ie.koala.sigapp.web.ChromeClient;
+import ie.koala.sigapp.web.ViewClient;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,20 +15,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.MediaController;
-import android.widget.VideoView;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass. Activities that
  * contain this fragment must implement the
- * {@link ImageFragment.OnFragmentInteractionListener} interface to handle
- * interaction events. Use the {@link VideoFragment#newInstance} factory method
+ * {@link WebFragment.OnFragmentInteractionListener} interface to handle
+ * interaction events. Use the {@link WebFragment#newInstance} factory method
  * to create an instance of this fragment.
  * 
  */
-public class VideoFragment extends SherlockFragment {
+public class WebFragment extends SherlockFragment {
 
-	private final static String TAG = VideoFragment.class.getSimpleName();
+	private final static String TAG = WebFragment.class.getSimpleName();
+
 	/**
 	 * The fragment argument representing the section number for this fragment.
 	 */
@@ -34,7 +37,7 @@ public class VideoFragment extends SherlockFragment {
 
 	private OnFragmentInteractionListener mListener;
 
-	VideoView video;
+	WebView html;
 
 	int position;
 
@@ -43,19 +46,20 @@ public class VideoFragment extends SherlockFragment {
 	 * the provided parameters.
 	 * 
 	 * @param position
-	 *            Tab position of this gallery instance.
+	 *            Tab position of this html instance.
 	 * 
-	 * @return A new instance of fragment ImageFragment.
+	 * @return A new instance of fragment HtmlFragment.
 	 */
-	public static VideoFragment newInstance(int position) {
-		VideoFragment fragment = new VideoFragment();
+	// TODO: Rename and change types and number of parameters
+	public static WebFragment newInstance(int position) {
+		WebFragment fragment = new WebFragment();
 		Bundle args = new Bundle();
 		args.putLong(ARG_SECTION_NUMBER, position);
 		fragment.setArguments(args);
 		return fragment;
 	}
 
-	public VideoFragment() {
+	public WebFragment() {
 		// Required empty public constructor
 	}
 
@@ -67,6 +71,7 @@ public class VideoFragment extends SherlockFragment {
 		}
 	}
 
+	@SuppressLint("SetJavaScriptEnabled")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -74,28 +79,25 @@ public class VideoFragment extends SherlockFragment {
 		final Activity activity;
 
 		activity = getActivity();
+		String url = GlobalObjects.app.getSectionAt(position).getUrl();
+		String fullUrl = "assets://" + url;
+		Log.d(TAG, "onCreateView(): fullUrl=" + fullUrl);
 
+		// activity.getWindow().requestFeature(Window.FEATURE_PROGRESS);
 		// Inflate the layout for this fragment
-		view = inflater.inflate(R.layout.fragment_video, container, false);
-		video = (VideoView) view.findViewById(R.id.video);
-		String videoFile = null;
+		view = inflater.inflate(R.layout.fragment_html, container, false);
+		html = (WebView) view.findViewById(R.id.html);
+		WebSettings webSettings = html.getSettings();
+		webSettings.setJavaScriptEnabled(true);
+		html.setWebChromeClient(new ChromeClient(activity));
+		html.setWebViewClient(new ViewClient(activity));
 		try {
-			videoFile = GlobalObjects.app.getSectionAt(position).getVideo();
-			Log.d(TAG, "onCreateView(): videoFile=" + videoFile);
-			playVideo(activity, videoFile);
+			html.loadUrl(fullUrl);
 		} catch (Exception e) {
-			Log.d(TAG, "Exception: can't load video (" + videoFile + ")");
+			html.loadData("Error: can't show help. [Exception]", "text/html",
+					"");
 		}
 		return view;
-	}
-
-	private void playVideo(Activity activity, String fileName) {
-		activity.setContentView(video);
-		Uri videoUrl = Uri.fromFile(new File(fileName));
-		video.setVideoURI(videoUrl);
-		video.setMediaController(new MediaController(activity));
-		video.requestFocus();
-		video.start();
 	}
 
 	// TODO: Rename method, update argument and hook method into UI event
@@ -122,4 +124,12 @@ public class VideoFragment extends SherlockFragment {
 		mListener = null;
 	}
 
+	public boolean canGoBack() {
+		Log.d(TAG, "HtmlFragment.canGoBack() called");
+		return html.canGoBack();
+	}
+
+	public void goBack() {
+		html.goBack();
+	}
 }

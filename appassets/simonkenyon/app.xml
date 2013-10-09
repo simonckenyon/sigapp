@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<app name="resume">
+    <theme name="basic" colour="#FF96AA39" />
+<!--     <section name="test" title="TEST" type="web"> -->
+<!--         <url>app/web/Test.wiki</url> -->
+<!--  	</section> -->
+    <section name="intro" title="INTRODUCTION" type="web">
+        <url>app/web/Intro.wiki</url>
+	</section>
+    <section name="highlights" title="CAREER HIGHLIGHTS" type="web">
+        <url>app/web/Highlights.wiki</url>
+	</section>
+    <section name="qualifications" title="QUALIFICATIONS" type="web">
+        <url>app/web/Qualifications.wiki</url>
+	</section>
+    <section name="contact" title="CONTACT DETAILS" type="web">
+        <url>app/web/Contact.wiki</url>
+	</section>
+    <section name="skills" title="SKILLS" type="web">
+        <url>app/web/Skills.wiki</url>
+	</section>
+    <section name="experience" title="EXPERIENCE" type="web">
+        <url>app/web/Experience.wiki</url>
+	</section>
+    <section name="about" title="ABOUT" type="web">
+        <url>app/web/About.wiki</url>
+	</section>
+</app>

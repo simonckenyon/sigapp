@@ -3,7 +3,9 @@ package ie.koala.sigapp.ui;
 import java.io.IOException;
 import java.io.InputStream;
 
-import ie.koala.sigapp.R;
+import com.actionbarsherlock.app.SherlockFragment;
+
+import ie.koala.sigapp.skynetlabs.R;
 import ie.koala.sigapp.util.GlobalObjects;
 import ie.koala.sigapp.util.OnFragmentInteractionListener;
 import android.app.Activity;
@@ -12,7 +14,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +28,7 @@ import android.widget.ImageView;
  * to create an instance of this fragment.
  * 
  */
-public class ImageFragment extends Fragment {
+public class ImageFragment extends SherlockFragment {
 	
 	private final static String TAG = ImageFragment.class.getSimpleName();
 	/**

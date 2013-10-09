@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    <color name="translucent_black">#7F000000</color>
+    <color name="red">#FF0000</color>
+    <color name="orange">#f26b23</color>
+    <color name="main_background">#ffe8e8e8</color>
+    <color name="sheet_list_item">#ffffff</color>
+    <color name="border_gray">#e8e8e8</color>
+    <color name="background_gray">#555555</color>
+    <color name="actionbar_colour">#f26b23</color>
+</resources>

@@ -1,5 +1,0 @@
-This is a simple [[TestAgain]] wiki tag
-
-Here is the [[Syntax|syntax]] of the wiki markup
-
-Some fancy stuff with [[Time]]

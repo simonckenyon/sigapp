@@ -66,6 +66,7 @@ public class Parser extends DefaultHandler {
 			Log.d(TAG, "found start of theme");
 			theme = new Theme();
 			theme.setName(attributes.getValue("name"));
+			theme.setColour(attributes.getValue("colour"));
 		} else if (qName.equalsIgnoreCase("section")) {
 			Log.d(TAG, "found start of section");
 			section = new Section();

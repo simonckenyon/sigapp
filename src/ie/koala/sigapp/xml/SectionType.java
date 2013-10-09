@@ -3,8 +3,7 @@ package ie.koala.sigapp.xml;
 public enum SectionType {
 
 	UNKNOWN			("unknown"),
-	WIKI			("wiki"),
-	HTML			("html"),
+	WEB				("web"),
 	IMAGE			("image"),
 	VIDEO			("video");
 
@@ -28,10 +27,8 @@ public enum SectionType {
 			default:
 			case UNKNOWN:
 				return "unknown";
-			case WIKI:
-				return "wiki";
-			case HTML:
-				return "html";
+			case WEB:
+				return "web";
 			case IMAGE:
 				return "image";
 			case VIDEO:

@@ -1,9 +1,11 @@
 package ie.koala.sigapp.ui;
 
-import ie.koala.sigapp.R;
+import ie.koala.sigapp.skynetlabs.R;
+
 import ie.koala.sigapp.util.GlobalObjects;
 import ie.koala.sigapp.util.OnFragmentInteractionListener;
 import ie.koala.sigapp.xml.Parser;
+import ie.koala.sigapp.xml.Section;
 import ie.koala.sigapp.xml.SectionType;
 
 import java.io.IOException;
@@ -21,19 +23,23 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.MenuItem;
 
-import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.ShareActionProvider;
 
-public class AppMainActivity extends FragmentActivity implements
+//import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+
+public class AppMainActivity extends SherlockFragmentActivity implements
 		OnFragmentInteractionListener {
 
 	private final static String TAG = AppMainActivity.class.getSimpleName();
@@ -47,23 +53,26 @@ public class AppMainActivity extends FragmentActivity implements
 	public static final int ACTIVITY_PURCHASE = 6;
 	public static final int ACTIVITY_SHEET_PREVIEW = 7;
 
-	SectionsPagerAdapter adapter;
+	private ShareActionProvider mShareActionProvider;
 	
+	SectionsPagerAdapter adapter;
+
 	private final Handler handler = new Handler();
 
-	private PagerSlidingTabStrip tabs;
+	// private PagerSlidingTabStrip tabs;
 	private ViewPager pager;
 
 	private Drawable oldBackground = null;
-//	private int currentColor = 0xFF666666;
-	private int currentColor = 0xFF96AA39;
+	private int currentColour = 0xff5a5a5a;
 
 	int mPosition;
-	List<Fragment> mFragmentList = new ArrayList<Fragment>();
+	List<SherlockFragment> mFragmentList = new ArrayList<SherlockFragment>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		final ActionBar actionBar = getSupportActionBar();
 
 		try {
 			AssetManager am = getResources().getAssets();
@@ -77,45 +86,105 @@ public class AppMainActivity extends FragmentActivity implements
 
 		setContentView(R.layout.activity_main);
 
-		tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 		pager = (ViewPager) findViewById(R.id.pager);
 		adapter = new SectionsPagerAdapter(getSupportFragmentManager());
-		
+
 		pager.setAdapter(adapter);
 
-		final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-				.getDisplayMetrics());
+		final int pageMargin = (int) TypedValue.applyDimension(
+				TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+						.getDisplayMetrics());
 		pager.setPageMargin(pageMargin);
-		
-		tabs.setViewPager(pager);
 
-		changeColor(currentColor);
-		
-		tabs.setOnPageChangeListener(new OnPageChangeListener() {
+		currentColour = GlobalObjects.app.getTheme().getIntColour();
+		changeColor(currentColour);
 
-			@Override
-			public void onPageSelected(int pos) {
-				Log.d(TAG, "page selected=" + pos);
-				mPosition = pos;
+		// Specify that tabs should be displayed in the action bar.
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+
+		// Create a tab listener that is called when the user changes tabs.
+		ActionBar.TabListener tabListener = new ActionBar.TabListener() {
+			public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
+				// When the tab is selected, switch to the
+				// corresponding page in the ViewPager.
+				mPosition = tab.getPosition();
+				pager.setCurrentItem(mPosition);
 			}
 
-			@Override
-			public void onPageScrollStateChanged(int arg0) {
+			public void onTabUnselected(ActionBar.Tab tab,
+					FragmentTransaction ft) {
+				// hide the given tab
 			}
 
+			public void onTabReselected(ActionBar.Tab tab,
+					FragmentTransaction ft) {
+				// probably ignore this event
+			}
+		};
+
+		pager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
 			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) {
+			public void onPageSelected(int position) {
+				// When swiping between pages, select the
+				// corresponding tab.
+				mPosition = position;
+				getActionBar().setSelectedNavigationItem(position);
 			}
 		});
 
+		setupTabs(actionBar, tabListener);
+
 	}
 
-	// @Override
-	// public boolean onCreateOptionsMenu(Menu menu) {
-	// // Inflate the menu; this adds items to the action bar if it is present.
-	// getMenuInflater().inflate(R.menu.main, menu);
-	// return true;
-	// }
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getSupportMenuInflater().inflate(R.menu.main, menu);
+		
+		// Locate MenuItem with ShareActionProvider
+	    MenuItem item = menu.findItem(R.id.menu_item_share);
+
+	    // Fetch and store ShareActionProvider
+	    mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+	    setShareIntent(getDefaultIntent());
+
+	    // Return true to display menu
+		return true;
+	}
+
+	// Call to update the share intent
+	private void setShareIntent(Intent shareIntent) {
+	    if (mShareActionProvider != null) {
+	        mShareActionProvider.setShareIntent(shareIntent);
+	    }
+	}
+	
+	/** Defines a default (dummy) share intent to initialize the action provider.
+	  * However, as soon as the actual content to be used in the intent
+	  * is known or changes, you must update the share intent by again calling
+	  * mShareActionProvider.setShareIntent()
+	  */
+	private Intent getDefaultIntent() {
+	    Intent intent = new Intent(Intent.ACTION_SEND);
+	    intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.share_url));
+	    intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.share_subject));
+	    intent.setType("text/plain");
+	    return intent;
+	}
+	
+	private void setupTabs(ActionBar actionBar,
+			ActionBar.TabListener tabListener) {
+		// Add tabs, specifying the tab's text and TabListener
+		List<Section> sections = GlobalObjects.app.getAllSections();
+		int count = sections.size();
+
+		for (int i = 0; i < count; i++) {
+			actionBar.addTab(actionBar.newTab()
+					.setText(sections.get(i).getTitle())
+					.setTabListener(tabListener));
+		}
+
+	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -141,26 +210,22 @@ public class AppMainActivity extends FragmentActivity implements
 		}
 
 		@Override
-		public Fragment getItem(int position) {
+		public SherlockFragment getItem(int position) {
 			SectionType sectionType = GlobalObjects.app.getSectionAt(position)
 					.getType();
-			Fragment f = null;
+			SherlockFragment f = null;
 
 			// getItem is called to instantiate the fragment for the given page.
 			Log.d(TAG, "getItem(): position=" + position + " type="
 					+ sectionType);
 			switch (sectionType) {
-			case HTML:
-				Log.d(TAG, "html fragment");
-				f = HtmlFragment.newInstance(position);
+			case WEB:
+				Log.d(TAG, "web fragment");
+				f = WebFragment.newInstance(position);
 				break;
 			case IMAGE:
 				Log.d(TAG, "image fragment");
 				f = ImageFragment.newInstance(position);
-				break;
-			case WIKI:
-				Log.d(TAG, "wiki fragment");
-				f = WikiFragment.newInstance(position);
 				break;
 			case VIDEO:
 				Log.d(TAG, "video fragment");
@@ -196,31 +261,17 @@ public class AppMainActivity extends FragmentActivity implements
 				.getType();
 		boolean goback;
 		switch (sectionType) {
-		case HTML:
-			Log.d(TAG, "html page");
-			HtmlFragment html = ((HtmlFragment) mFragmentList.get(mPosition));
+		case WEB:
+			Log.d(TAG, "web page");
+			WebFragment html = ((WebFragment) mFragmentList.get(mPosition));
 			goback = html.canGoBack();
 			if (!goback) {
 				Log.d(TAG, "cannot go back, so pass to super");
 				this.finish();
-//				super.onBackPressed();
+				// super.onBackPressed();
 			} else {
 				Log.d(TAG, "can go back");
 				html.goBack();
-			}
-			break;
-		case WIKI:
-			Log.d(TAG, "html page");
-			WikiFragment wiki = ((WikiFragment) mFragmentList.get(mPosition));
-			goback = wiki.canGoBack();
-			if (!goback) {
-				Log.d(TAG, "cannot go back, so pass to super");
-				this.finish();
-//				super.onBackPressed();
-			} else {
-				Log.d(TAG, "can go back");
-				wiki.goBack();
-				
 			}
 			break;
 		case IMAGE:
@@ -236,17 +287,19 @@ public class AppMainActivity extends FragmentActivity implements
 	public void onFragmentInteraction(Uri uri) {
 		// TODO Auto-generated method stub
 	}
-	
-	private void changeColor(int newColor) {
 
-		tabs.setIndicatorColor(newColor);
+	private void changeColor(int newColour) {
+
+		// tabs.setIndicatorColor(newColour);
 
 		// change ActionBar color just if an ActionBar is available
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
-			Drawable colorDrawable = new ColorDrawable(newColor);
-			Drawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
-			LayerDrawable ld = new LayerDrawable(new Drawable[] { colorDrawable, bottomDrawable });
+			Drawable colorDrawable = new ColorDrawable(newColour);
+			Drawable bottomDrawable = getResources().getDrawable(
+					R.drawable.actionbar_bottom);
+			LayerDrawable ld = new LayerDrawable(new Drawable[] {
+					colorDrawable, bottomDrawable });
 
 			if (oldBackground == null) {
 
@@ -258,7 +311,8 @@ public class AppMainActivity extends FragmentActivity implements
 
 			} else {
 
-				TransitionDrawable td = new TransitionDrawable(new Drawable[] { oldBackground, ld });
+				TransitionDrawable td = new TransitionDrawable(new Drawable[] {
+						oldBackground, ld });
 
 				// workaround for broken ActionBarContainer drawable handling on
 				// pre-API 17 builds
@@ -281,21 +335,21 @@ public class AppMainActivity extends FragmentActivity implements
 
 		}
 
-		currentColor = newColor;
+		currentColour = newColour;
 
 	}
-	
+
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt("currentColor", currentColor);
+		outState.putInt("currentColor", currentColour);
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		currentColor = savedInstanceState.getInt("currentColor");
-		changeColor(currentColor);
+		currentColour = savedInstanceState.getInt("currentColor");
+		changeColor(currentColour);
 	}
 
 	private Drawable.Callback drawableCallback = new Drawable.Callback() {

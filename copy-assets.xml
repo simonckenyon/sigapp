@@ -1,0 +1,106 @@
+<project default="version-info" >
+    <target name="version-info" >
+		<property
+		    name="sigapp.app.name"
+		    value="skynetlabs" />
+		<property prefix="sigapp.app" file="appassets/${sigapp.app.name}/app.properties" />
+				
+        <property
+            name="sigapp.asset.dir"
+            location="appassets/${sigapp.app.name}" />
+        <property
+            name="asset.dir"
+            location="assets" />
+        <property
+            name="res.dir"
+            location="res" />
+        
+        <property
+            name="app_name.start"
+            value="&lt;string name=&quot;app_name&quot;>" />
+        <property
+            name="app_name.end"
+            value="&lt;/string>" />
+        
+        <property
+            name="share_url.start"
+            value="&lt;string name=&quot;share_url&quot;>" />
+        <property
+            name="share_url.end"
+            value="&lt;/string>" />
+                
+        <property
+            name="share_subject.start"
+            value="&lt;string name=&quot;share_subject&quot;>" />
+        <property
+            name="share_subject.end"
+            value="&lt;/string>" />
+        
+        <!-- substitute values in res/values/strings.xml -->
+        <replaceregexp
+            file="res/values/strings.xml"
+            match="${app_name.start}.*${app_name.end}"
+            replace="${app_name.start}${sigapp.app.app_name}${app_name.end}" />
+        <replaceregexp
+            file="res/values/strings.xml"
+            match="${share_url.start}.*${share_url.end}"
+            replace="${share_url.start}${sigapp.app.share_url}${share_url.end}" />
+        <replaceregexp
+            file="res/values/strings.xml"
+            match="${share_subject.start}.*${share_subject.end}"
+            replace="${share_subject.start}${sigapp.app.share_subject}${share_subject.end}" />
+        
+        <delete dir="${asset.dir}/app" />
+
+        <copy
+            failonerror="false" verbose="true" overwrite="true"
+            todir="${asset.dir}/app" >
+
+            <fileset dir="${sigapp.asset.dir}" >
+
+                <include name="app.xml" />
+
+                <include name="web/**/*.html" />
+
+                <include name="web/**/*.wiki" />
+
+                <include name="css/**/*.css" />
+
+                <include name="js/**/*.js" />
+
+                <include name="images/**/*.jpg" />
+
+                <include name="images/**/*.png" />
+
+                <include name="videos/**/*.avi" />
+
+                <include name="videos/**/*.mp4" />
+            </fileset>
+        </copy>
+
+        <copy
+            failonerror="false" verbose="true" overwrite="true"
+            file="${sigapp.asset.dir}/icons/drawable-hdpi/ic_launcher.png"
+            todir="${res.dir}/drawable-hdpi" />
+
+        <copy
+            failonerror="false" verbose="true" overwrite="true"
+            file="${sigapp.asset.dir}/icons/drawable-ldpi/ic_launcher.png"
+            todir="${res.dir}/drawable-ldpi" />
+
+        <copy
+            failonerror="false" verbose="true" overwrite="true"
+            file="${sigapp.asset.dir}/icons/drawable-mdpi/ic_launcher.png"
+            todir="${res.dir}/drawable-mdpi" />
+
+        <copy
+            failonerror="false" verbose="true" overwrite="true"
+            file="${sigapp.asset.dir}/icons/drawable-xhdpi/ic_launcher.png"
+            todir="${res.dir}/drawable-xhdpi" />
+
+        <copy
+            failonerror="false" verbose="true" overwrite="true"
+            file="${sigapp.asset.dir}/icons/drawable-xxhdpi/ic_launcher.png"
+            todir="${res.dir}/drawable-xxhdpi" />
+    </target>
+</project>
