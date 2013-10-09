@@ -70,9 +70,7 @@ public class ResourceResponse {
 		try {
 			in_s = am.open(fileName);
 			String encoding = "UTF-8";
-			WikiModel wikiModel = new WikiModel(
-					"assets://app/images/${image}",
-					"assets://app/web/${title}.wiki");
+			WikiModel wikiModel = new AppWikiModel();
 			String wikiStr = getStringFromInputStream(in_s);
 //			Log.d(TAG, "wikiStr=" + wikiStr);
 			String htmlStr = wikiModel.render(wikiStr);

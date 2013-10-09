@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- filled in by copy-assets.xml -->
-    <string name="app_name">Skynet Labs</string>
-    <string name="share_subject">Link to Skynet Labs website</string>
-    <string name="share_url">http://www.skynetlabs.com/</string>
-    
+    <string name="app_name">Simon Kenyon</string>
+    <string name="share_subject">Download this app from Simon Kenyon</string>
+    <string name="share_url">https://play.google.com/store/apps/details?id=ie.koala.sigapp.simonkenyon</string>
     <string name="share">Share using#8230;</string>
     <string name="image_description">image</string>
     <string name="action_settings">Settings</string>
+    <string name="action_qr_code">QR Code</string>
+    <string name="title_activity_qr_code">QR Code</string>
     
+    <string name="app_version_name_format" formatted="false">Version: %s</string>
+    <string name="app_version_code_format" formatted="false">Build Number: %s</string>
+    <string name="app_version_build_timestamp_format" formatted="false">Build Timestamp: %s</string>
+    <string name="app_version_git_hash_format" formatted="false">Git Hash: %s</string>
+
 </resources>

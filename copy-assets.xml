@@ -2,7 +2,7 @@
     <target name="version-info" >
 		<property
 		    name="sigapp.app.name"
-		    value="skynetlabs" />
+		    value="simonkenyon" />
 		<property prefix="sigapp.app" file="appassets/${sigapp.app.name}/app.properties" />
 				
         <property
@@ -80,27 +80,12 @@
 
         <copy
             failonerror="false" verbose="true" overwrite="true"
-            file="${sigapp.asset.dir}/icons/drawable-hdpi/ic_launcher.png"
-            todir="${res.dir}/drawable-hdpi" />
+            todir="${res.dir}">
+        
+            <fileset dir="${sigapp.asset.dir}/drawables" >
+                <include name="**/*.png" />
+            </fileset>
+        </copy>
 
-        <copy
-            failonerror="false" verbose="true" overwrite="true"
-            file="${sigapp.asset.dir}/icons/drawable-ldpi/ic_launcher.png"
-            todir="${res.dir}/drawable-ldpi" />
-
-        <copy
-            failonerror="false" verbose="true" overwrite="true"
-            file="${sigapp.asset.dir}/icons/drawable-mdpi/ic_launcher.png"
-            todir="${res.dir}/drawable-mdpi" />
-
-        <copy
-            failonerror="false" verbose="true" overwrite="true"
-            file="${sigapp.asset.dir}/icons/drawable-xhdpi/ic_launcher.png"
-            todir="${res.dir}/drawable-xhdpi" />
-
-        <copy
-            failonerror="false" verbose="true" overwrite="true"
-            file="${sigapp.asset.dir}/icons/drawable-xxhdpi/ic_launcher.png"
-            todir="${res.dir}/drawable-xxhdpi" />
     </target>
 </project>

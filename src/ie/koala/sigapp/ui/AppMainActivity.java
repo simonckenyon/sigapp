@@ -1,7 +1,6 @@
 package ie.koala.sigapp.ui;
 
-import ie.koala.sigapp.skynetlabs.R;
-
+import ie.koala.sigapp.simonkenyon.R;
 import ie.koala.sigapp.util.GlobalObjects;
 import ie.koala.sigapp.util.OnFragmentInteractionListener;
 import ie.koala.sigapp.xml.Parser;
@@ -14,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -44,17 +45,11 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 
 	private final static String TAG = AppMainActivity.class.getSimpleName();
 
-	public static final int ACTIVITY_LOGIN = 0;
-	public static final int ACTIVITY_MAIN = 1;
-	public static final int ACTIVITY_SETTINGS = 2;
-	public static final int ACTIVITY_ABOUT = 3;
-	public static final int ACTIVITY_HELP = 4;
-	public static final int ACTIVITY_FEEDBACK = 5;
-	public static final int ACTIVITY_PURCHASE = 6;
-	public static final int ACTIVITY_SHEET_PREVIEW = 7;
+	public static final int ACTIVITY_SETTINGS = 1;
+	public static final int ACTIVITY_QR_CODE = 2;
 
 	private ShareActionProvider mShareActionProvider;
-	
+
 	SectionsPagerAdapter adapter;
 
 	private final Handler handler = new Handler();
@@ -71,8 +66,12 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
+		// get info from the manifest
+		getInfo();
+
 		final ActionBar actionBar = getSupportActionBar();
+		actionBar.setDisplayShowTitleEnabled(false);
 
 		try {
 			AssetManager am = getResources().getAssets();
@@ -136,42 +135,74 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 
 	}
 
+	private void getInfo() {
+
+		try {
+			PackageManager manager = this.getPackageManager();
+			PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
+			GlobalObjects.setVersionName(String.format(
+					getString(R.string.app_version_name_format),
+					info.versionName));
+			GlobalObjects.setVersionCode(String.format(
+					getString(R.string.app_version_code_format),
+					Integer.toString(info.versionCode)));
+			GlobalObjects.setVersionBuildTimestamp(String.format(
+					getString(R.string.app_version_build_timestamp_format),
+					getString(R.string.app_version_build_timestamp)));
+			GlobalObjects.setVersionGitHash(String.format(
+					getString(R.string.app_version_git_hash_format),
+					getString(R.string.app_version_git_hash).substring(0, 10)));
+			Log.i(TAG, "versionName=" + GlobalObjects.getVersionName());
+			Log.i(TAG, "versionCode=" + GlobalObjects.getVersionCode());
+			Log.i(TAG,
+					"versionBuildTimestamp="
+							+ GlobalObjects.getVersionBuildTimestamp());
+			Log.i(TAG, "versionGitHash=" + GlobalObjects.getVersionGitHash());
+		} catch (Exception e) {
+			Log.e(TAG, "Error getting version");
+		}
+
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getSupportMenuInflater().inflate(R.menu.main, menu);
-		
+
 		// Locate MenuItem with ShareActionProvider
-	    MenuItem item = menu.findItem(R.id.menu_item_share);
+		MenuItem item = menu.findItem(R.id.menu_item_share);
 
-	    // Fetch and store ShareActionProvider
-	    mShareActionProvider = (ShareActionProvider) item.getActionProvider();
-	    setShareIntent(getDefaultIntent());
+		// Fetch and store ShareActionProvider
+		mShareActionProvider = (ShareActionProvider) item.getActionProvider();
+		setShareIntent(getDefaultIntent());
 
-	    // Return true to display menu
+		// Return true to display menu
 		return true;
 	}
 
 	// Call to update the share intent
 	private void setShareIntent(Intent shareIntent) {
-	    if (mShareActionProvider != null) {
-	        mShareActionProvider.setShareIntent(shareIntent);
-	    }
+		if (mShareActionProvider != null) {
+			mShareActionProvider.setShareIntent(shareIntent);
+		}
 	}
-	
-	/** Defines a default (dummy) share intent to initialize the action provider.
-	  * However, as soon as the actual content to be used in the intent
-	  * is known or changes, you must update the share intent by again calling
-	  * mShareActionProvider.setShareIntent()
-	  */
+
+	/**
+	 * Defines a default (dummy) share intent to initialize the action provider.
+	 * However, as soon as the actual content to be used in the intent is known
+	 * or changes, you must update the share intent by again calling
+	 * mShareActionProvider.setShareIntent()
+	 */
 	private Intent getDefaultIntent() {
-	    Intent intent = new Intent(Intent.ACTION_SEND);
-	    intent.putExtra(Intent.EXTRA_TEXT, getResources().getString(R.string.share_url));
-	    intent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.share_subject));
-	    intent.setType("text/plain");
-	    return intent;
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.putExtra(Intent.EXTRA_TEXT,
+				getResources().getString(R.string.share_url));
+		intent.putExtra(Intent.EXTRA_SUBJECT,
+				getResources().getString(R.string.share_subject));
+		intent.setType("text/plain");
+		return intent;
 	}
-	
+
 	private void setupTabs(ActionBar actionBar,
 			ActionBar.TabListener tabListener) {
 		// Add tabs, specifying the tab's text and TabListener
@@ -191,10 +222,15 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 		Intent intent;
 
 		int itemId = item.getItemId();
-		if (itemId == R.id.action_settings) {
-			intent = new Intent(AppMainActivity.this, SettingsActivity.class);
-			startActivityForResult(intent, ACTIVITY_SETTINGS);
+		if (itemId == R.id.action_qr_code) {
+			intent = new Intent(AppMainActivity.this, QrCodeActivity.class);
+			startActivityForResult(intent, ACTIVITY_QR_CODE);
 			return true;
+			// } else if (itemId == R.id.action_settings) {
+			// intent = new Intent(AppMainActivity.this,
+			// SettingsActivity.class);
+			// startActivityForResult(intent, ACTIVITY_SETTINGS);
+			// return true;
 		}
 		return false;
 	}

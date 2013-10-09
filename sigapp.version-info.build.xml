@@ -1,0 +1,41 @@
+<project default="version-info" >
+    <target name="version-info" >
+        <!-- Exec `git rev-parse HEAD` to get the hash of the code being built. -->
+        <exec executable="git" output="git-rev-parse-head.txt" >
+            <arg line="rev-parse HEAD" />
+        </exec>
+        <loadfile property="git.hash" srcFile="git-rev-parse-head.txt"/>
+        <property prefix="git" file="git-rev-parse.properties" />
+        <buildnumber />
+        <tstamp>
+            <format property="build.timestamp"  pattern="yyyy.MM.dd HH:mm:ss z" locale="en,IE" />
+        </tstamp>
+        <echo>Git hash: ${git.hash}</echo>
+        <echo>Build number: ${build.number}</echo>
+        <echo>Build timestamp: ${build.timestamp}</echo>
+        
+        <!-- substitute values in AndroidManifest.xml -->
+        <replaceregexp
+            file="AndroidManifest.xml"
+            match="android:versionCode=(.*)"
+            replace="android:versionCode=&quot;${build.number}&quot;" />
+        
+        <!-- substitute values in res/values/version.xml -->
+        <property name="gitmatch.start" value="&lt;string name=&quot;app_version_git_hash&quot;&gt;"/>
+        <property name="gitmatch.end" value="&lt;/string&gt;"/>
+        <replaceregexp
+            file="res/values/version.xml"
+            match="${gitmatch.start}.*${gitmatch.end}"
+            replace="${gitmatch.start}${git.hash}${gitmatch.end}" />
+        
+        <property name="timestampmatch.start" value="&lt;string name=&quot;app_version_build_timestamp&quot;&gt;"/>
+        <property name="timestampmatch.end" value="&lt;/string&gt;"/>
+        <replaceregexp
+            file="res/values/version.xml"
+            match="${timestampmatch.start}.*${timestampmatch.end}"
+            replace="${timestampmatch.start}${build.timestamp}${timestampmatch.end}" />
+        
+        <!-- Clean up -->
+		<delete file="git-rev-parse-head.txt" />
+    </target>
+</project>

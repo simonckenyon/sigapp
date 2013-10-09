@@ -2,7 +2,7 @@ package ie.koala.sigapp.ui;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
-import ie.koala.sigapp.skynetlabs.R;
+import ie.koala.sigapp.simonkenyon.R;
 import ie.koala.sigapp.util.GlobalObjects;
 import ie.koala.sigapp.util.OnFragmentInteractionListener;
 import ie.koala.sigapp.web.ChromeClient;

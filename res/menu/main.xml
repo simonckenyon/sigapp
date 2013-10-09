@@ -1,10 +1,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
+<!--     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/action_settings"/>
+ -->    <item
+        android:id="@+id/action_qr_code"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_qr_code"/>
     <item
         android:id="@+id/menu_item_share"
         android:actionProviderClass="com.actionbarsherlock.widget.ShareActionProvider"

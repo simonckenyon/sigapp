@@ -18,7 +18,7 @@ import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
-import ie.koala.sigapp.skynetlabs.R;
+import ie.koala.sigapp.simonkenyon.R;
 
 import java.util.List;
 

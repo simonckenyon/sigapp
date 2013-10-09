@@ -1,3 +1,5 @@
+= About =
+
 This Android app was developed with a number of objectives:
 
 * To present my CV
@@ -47,3 +49,10 @@ Examples of where this might be useful include (but are not limited to):
 * Rules and regulations
 * Processed and procedures
 * Product documentation
+
+== App Build Info ==
+
+<info timestamp="true" />
+<info githash="true" />
+<info name="true" />
+<info code="true" />

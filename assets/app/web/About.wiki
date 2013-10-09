@@ -1,18 +1,58 @@
-== Accurate, Always-On Oilfield Intelligence ==
+= About =
 
-Mitigate data administration & security risk, reduce non-productive time and expedite business intelligence.
+This Android app was developed with a number of objectives:
 
-== Our Purpose ==
+* To present my CV
+* Demonstrate that I do know something about developing apps
+* To explore a new class of mobile app
 
-Skynet Labs develops secure real-time Oil & Gas analysis and optimization software
-Headquartered in Dublin, Ireland, with sales divisions in Houston, Texas, We provide scalable integrated tools for Exploration and Production; tools delivered on smart devices and web browser that save time and money across the digital oilfield by optimizing how data is aggregated, analyzed, tracked and shared.
+This app is a pretty straightforward translation of my
+current CV into an app. The rationale/explanation for this is that
+I was driving home from work and I was listening to the radio
+(George Hook on Newstalk as it happens). He was discussing resumes
+and how some people had resorted to the use of video to present
+themselves to prospective employer.
+	
+This was in the context of people applying to Newstalk
+itself. George was quite taken aback that somebody would use
+youtube as a means for applying.
+	
+Given that my expertise is in the design and development of
+software, I thought about how I could apply the use of technology
+to the process of obtaining a new role. Apart from the use of
+Microsoft Word and Excel and email, my only foray into this
+territory was the re-casting on my CV into a portable wiki.
 
-== Our Solution ==
+So I decided to create this app. It it demonstrates
+that I can in fact develop android apps.
+	
+This brings me to the last of my three considerations listed
+above. Rather than create a single-instance app, I decided
+to create a general solution to the problem of presenting
+information to a user in a mobile form. The app consists of four
+parts:
+	
+* The app itself
+* An XML file which describes the contents
+* The contents (html, wiki, images and video
+* A mechanism for including the XML and contents into the app at build time
 
-24/7 real-time data accessibility, big data security, data vizualization and collaborative reporting
-We advocate simplified, accessible and secure new technology. Our integrated suite of mobile utility applications synchronise securely with our real-time SaaS cloud framework to deliver end-to-end data aggregation, collaboration and analytics reporting. Learn more about how our products inform business decisions from rig to boardroom...
+This is reflected in the name of the app, Single-Instance Generator App (sigapp)
+	
+This is an area which I will continue to explore. I will
+create a web site where a user can enter the content, be it
+text (wiki), images and video. This would be bundled up and
+injected into the app, which then can be downloaded by the user.
 
-== Our Benefits ==
+Examples of where this might be useful include (but are not limited to):
+	
+* Rules and regulations
+* Processed and procedures
+* Product documentation
 
-Enterprise mobility solutions improve productivity and efficiency by up to 45%.
-An average $15 billion is lost annually due to manual drilling calculation errors. 60% of an O&G engineer's day is spent on administrative and reporting work. 80% of professionals commit more than 3 hours a day to updating excel sheets. Our software is designed to streamline drilling engineers everyday tasks, improve operational efficiency, mitigate data risk and secure data collaboration.
+== App Build Info ==
+
+<info timestamp="true" />
+<info githash="true" />
+<info name="true" />
+<info code="true" />

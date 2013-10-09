@@ -3,7 +3,7 @@ package ie.koala.sigapp.ui;
 import java.io.File;
 import com.actionbarsherlock.app.SherlockFragment;
 
-import ie.koala.sigapp.skynetlabs.R;
+import ie.koala.sigapp.simonkenyon.R;
 import ie.koala.sigapp.util.GlobalObjects;
 import ie.koala.sigapp.util.OnFragmentInteractionListener;
 import android.app.Activity;
