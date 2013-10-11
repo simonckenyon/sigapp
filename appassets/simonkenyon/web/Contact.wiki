@@ -1,10 +1,14 @@
 =Contact =
 
-;mobile
+;Mobile telephone number
 : <a href="tel:+353862400005">+353 86 240 0005</a>
-;email
+;Email address
 : <a href="mailto:simon@koala.ie">simon@koala.ie</a></li>
-;skype
+;Skype address
 : <a href="skype:simonckenyon?call&video=true">simonckenyon</a></li>
-;linkedin
+;LinkedIn profile
 : <a href="http://ie.linkedin.com/pub/simon-kenyon/0/6b2/744">http://ie.linkedin.com/pub/simon-kenyon/0/6b2/744</a></li>
+;CV in PDF format
+:<a href="https://www.dropbox.com/s/wd5b4lapgv8vl5z/Simon%20Kenyon.pdf">https://www.dropbox.com/s/wd5b4lapgv8vl5z/Simon%20Kenyon.pdf</a>
+;CV App (this app) on the Google Play Store
+: <a href="https://play.google.com/store/apps/details?id=ie.koala.sigapp.simonkenyon">https://play.google.com/store/apps/details?id=ie.koala.sigapp.simonkenyon</a>

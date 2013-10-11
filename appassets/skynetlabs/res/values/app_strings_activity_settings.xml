@@ -1,0 +1,20 @@
+<resources>
+
+    <string name="pref_default_sharing_message">Here is some information about Skynet Labs</string>
+
+    <string-array name="pref_sharing_list_titles">
+        <item>Website address</item>
+        <item>D.F.S App on the Apple App Store</item>
+        <item>D.F.S App on the Google Play Store</item>
+        <item>D.U.C App on the Apple App Store</item>
+        <item>D.U.C App on the Google Play Store</item>
+    </string-array>
+    <string-array name="pref_sharing_list_values">
+        <item>http://www.skynetlabs.com/</item>
+        <item>https://itunes.apple.com/us/app/d.f.s/id595705084?mt=8</item>
+        <item>https://play.google.com/store/apps/details?id=com.skynetlabs.dfs&amp;hl=en</item>
+        <item>https://itunes.apple.com/us/app/duc/id523162918?mt=8</item>
+        <item>https://play.google.com/store/apps/details?id=com.skynetlabs.duc&amp;hl=en</item>
+    </string-array>
+
+</resources>

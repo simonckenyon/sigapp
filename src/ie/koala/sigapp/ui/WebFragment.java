@@ -79,7 +79,7 @@ public class WebFragment extends SherlockFragment {
 		final Activity activity;
 
 		activity = getActivity();
-		String url = GlobalObjects.app.getSectionAt(position).getUrl();
+		String url = GlobalObjects.getApp().getSectionAt(position).getUrl();
 		String fullUrl = "assets://" + url;
 		Log.d(TAG, "onCreateView(): fullUrl=" + fullUrl);
 

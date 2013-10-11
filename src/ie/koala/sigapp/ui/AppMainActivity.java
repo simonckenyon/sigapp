@@ -13,17 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
@@ -37,6 +32,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.ShareActionProvider;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 
 //import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
 
@@ -52,20 +49,18 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 
 	SectionsPagerAdapter adapter;
 
-	private final Handler handler = new Handler();
-
-	// private PagerSlidingTabStrip tabs;
 	private ViewPager pager;
-
-	private Drawable oldBackground = null;
-	private int currentColour = 0xff5a5a5a;
 
 	int mPosition;
 	List<SherlockFragment> mFragmentList = new ArrayList<SherlockFragment>();
 
+	OnSharedPreferenceChangeListener listener;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		listener = GlobalObjects.getPreferences(this);
 
 		// get info from the manifest
 		getInfo();
@@ -94,9 +89,6 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 				TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
 						.getDisplayMetrics());
 		pager.setPageMargin(pageMargin);
-
-		currentColour = GlobalObjects.app.getTheme().getIntColour();
-		changeColor(currentColour);
 
 		// Specify that tabs should be displayed in the action bar.
 		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -140,28 +132,37 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 		try {
 			PackageManager manager = this.getPackageManager();
 			PackageInfo info = manager.getPackageInfo(this.getPackageName(), 0);
-			GlobalObjects.setVersionName(String.format(
-					getString(R.string.app_version_name_format),
-					info.versionName));
-			GlobalObjects.setVersionCode(String.format(
-					getString(R.string.app_version_code_format),
+			GlobalObjects.setVersionName(String.format(getString(R.string.app_version_name_format), info.versionName));
+			GlobalObjects.setVersionCode(String.format(getString(R.string.app_version_code_format),
 					Integer.toString(info.versionCode)));
-			GlobalObjects.setVersionBuildTimestamp(String.format(
-					getString(R.string.app_version_build_timestamp_format),
+			GlobalObjects.setVersionBuildTimestamp(String.format(getString(R.string.app_version_build_timestamp_format),
 					getString(R.string.app_version_build_timestamp)));
-			GlobalObjects.setVersionGitHash(String.format(
-					getString(R.string.app_version_git_hash_format),
+			GlobalObjects.setVersionGitHash(String.format(getString(R.string.app_version_git_hash_format),
 					getString(R.string.app_version_git_hash).substring(0, 10)));
 			Log.i(TAG, "versionName=" + GlobalObjects.getVersionName());
 			Log.i(TAG, "versionCode=" + GlobalObjects.getVersionCode());
-			Log.i(TAG,
-					"versionBuildTimestamp="
-							+ GlobalObjects.getVersionBuildTimestamp());
+			Log.i(TAG, "versionBuildTimestamp=" + GlobalObjects.getVersionBuildTimestamp());
 			Log.i(TAG, "versionGitHash=" + GlobalObjects.getVersionGitHash());
 		} catch (Exception e) {
 			Log.e(TAG, "Error getting version");
 		}
 
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		if (GlobalObjects.isAnalyticsEnabled()) {
+			EasyTracker.getInstance(this).activityStart(this);
+		}
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (GlobalObjects.isAnalyticsEnabled()) {
+			EasyTracker.getInstance(this).activityStop(this);
+		}
 	}
 
 	@Override
@@ -176,15 +177,15 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 		mShareActionProvider = (ShareActionProvider) item.getActionProvider();
 		setShareIntent(getDefaultIntent());
 
+		trackShare();
+
 		// Return true to display menu
 		return true;
 	}
 
 	// Call to update the share intent
 	private void setShareIntent(Intent shareIntent) {
-		if (mShareActionProvider != null) {
-			mShareActionProvider.setShareIntent(shareIntent);
-		}
+		mShareActionProvider.setShareIntent(shareIntent);
 	}
 
 	/**
@@ -194,25 +195,33 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 	 * mShareActionProvider.setShareIntent()
 	 */
 	private Intent getDefaultIntent() {
+		String whatToShareTitle = GlobalObjects.getWhatToShareTitle();
+		String whatToShare = GlobalObjects.getWhatToShare();
+		String sharingMessage = GlobalObjects.getSharingMessage();
+		Log.d(TAG, "whatToShareTitle=\"" + whatToShareTitle + "\" whatToShare=\"" + whatToShare + "\" sharingMessage=\"" + sharingMessage + "\"");
+		
 		Intent intent = new Intent(Intent.ACTION_SEND);
-		intent.putExtra(Intent.EXTRA_TEXT,
-				getResources().getString(R.string.share_url));
-		intent.putExtra(Intent.EXTRA_SUBJECT,
-				getResources().getString(R.string.share_subject));
+		intent.putExtra(Intent.EXTRA_TEXT, whatToShareTitle + ": " + whatToShare);
+		intent.putExtra(Intent.EXTRA_SUBJECT, sharingMessage);
 		intent.setType("text/plain");
 		return intent;
+	}
+
+	private void trackShare() {
+		if (GlobalObjects.isAnalyticsEnabled()) {
+			EasyTracker easyTracker = EasyTracker.getInstance(this);
+			easyTracker.send(MapBuilder.createEvent("ui_action", "button_press", "share_button", null).build());
+		}
 	}
 
 	private void setupTabs(ActionBar actionBar,
 			ActionBar.TabListener tabListener) {
 		// Add tabs, specifying the tab's text and TabListener
-		List<Section> sections = GlobalObjects.app.getAllSections();
+		List<Section> sections = GlobalObjects.getApp().getAllSections();
 		int count = sections.size();
 
 		for (int i = 0; i < count; i++) {
-			actionBar.addTab(actionBar.newTab()
-					.setText(sections.get(i).getTitle())
-					.setTabListener(tabListener));
+			actionBar.addTab(actionBar.newTab().setText(sections.get(i).getTitle()).setTabListener(tabListener));
 		}
 
 	}
@@ -226,11 +235,10 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 			intent = new Intent(AppMainActivity.this, QrCodeActivity.class);
 			startActivityForResult(intent, ACTIVITY_QR_CODE);
 			return true;
-			// } else if (itemId == R.id.action_settings) {
-			// intent = new Intent(AppMainActivity.this,
-			// SettingsActivity.class);
-			// startActivityForResult(intent, ACTIVITY_SETTINGS);
-			// return true;
+		} else if (itemId == R.id.action_settings) {
+			intent = new Intent(AppMainActivity.this, SettingsActivity.class);
+			startActivityForResult(intent, ACTIVITY_SETTINGS);
+			return true;
 		}
 		return false;
 	}
@@ -247,8 +255,7 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public SherlockFragment getItem(int position) {
-			SectionType sectionType = GlobalObjects.app.getSectionAt(position)
-					.getType();
+			SectionType sectionType = GlobalObjects.getApp().getSectionAt(position).getType();
 			SherlockFragment f = null;
 
 			// getItem is called to instantiate the fragment for the given page.
@@ -277,13 +284,13 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public int getCount() {
-			return GlobalObjects.app.sectionCount();
+			return GlobalObjects.getApp().sectionCount();
 		}
 
 		@Override
 		public CharSequence getPageTitle(int location) {
 			if (location < getCount()) {
-				return GlobalObjects.app.getSectionAt(location).getTitle();
+				return GlobalObjects.getApp().getSectionAt(location).getTitle();
 			} else {
 				return null;
 			}
@@ -293,8 +300,7 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onBackPressed() {
 		Log.d(TAG, "back selected");
-		SectionType sectionType = GlobalObjects.app.getSectionAt(mPosition)
-				.getType();
+		SectionType sectionType = GlobalObjects.getApp().getSectionAt(mPosition).getType();
 		boolean goback;
 		switch (sectionType) {
 		case WEB:
@@ -324,86 +330,15 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 		// TODO Auto-generated method stub
 	}
 
-	private void changeColor(int newColour) {
-
-		// tabs.setIndicatorColor(newColour);
-
-		// change ActionBar color just if an ActionBar is available
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-
-			Drawable colorDrawable = new ColorDrawable(newColour);
-			Drawable bottomDrawable = getResources().getDrawable(
-					R.drawable.actionbar_bottom);
-			LayerDrawable ld = new LayerDrawable(new Drawable[] {
-					colorDrawable, bottomDrawable });
-
-			if (oldBackground == null) {
-
-				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-					ld.setCallback(drawableCallback);
-				} else {
-					getActionBar().setBackgroundDrawable(ld);
-				}
-
-			} else {
-
-				TransitionDrawable td = new TransitionDrawable(new Drawable[] {
-						oldBackground, ld });
-
-				// workaround for broken ActionBarContainer drawable handling on
-				// pre-API 17 builds
-				// https://github.com/android/platform_frameworks_base/commit/a7cc06d82e45918c37429a59b14545c6a57db4e4
-				if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-					td.setCallback(drawableCallback);
-				} else {
-					getActionBar().setBackgroundDrawable(td);
-				}
-
-				td.startTransition(200);
-
-			}
-
-			oldBackground = ld;
-
-			// http://stackoverflow.com/questions/11002691/actionbar-setbackgrounddrawable-nulling-background-from-thread-handler
-			getActionBar().setDisplayShowTitleEnabled(false);
-			getActionBar().setDisplayShowTitleEnabled(true);
-
-		}
-
-		currentColour = newColour;
-
-	}
-
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putInt("currentColor", currentColour);
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		currentColour = savedInstanceState.getInt("currentColor");
-		changeColor(currentColour);
 	}
-
-	private Drawable.Callback drawableCallback = new Drawable.Callback() {
-		@Override
-		public void invalidateDrawable(Drawable who) {
-			getActionBar().setBackgroundDrawable(who);
-		}
-
-		@Override
-		public void scheduleDrawable(Drawable who, Runnable what, long when) {
-			handler.postAtTime(what, when);
-		}
-
-		@Override
-		public void unscheduleDrawable(Drawable who, Runnable what) {
-			handler.removeCallbacks(what);
-		}
-	};
 
 	void setPage(int position) {
 		pager.setCurrentItem(position);

@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Simon Kenyon</string>
-    <string name="share_subject">Download this app from Simon Kenyon</string>
-    <string name="share_url">https://play.google.com/store/apps/details?id=ie.koala.sigapp.simonkenyon</string>
-    <string name="share">Share using#8230;</string>
     <string name="image_description">image</string>
     <string name="action_settings">Settings</string>
+    <string name="description_qr_code">QR Code</string>
+    <string name="contents_of_qr_code">Contents of QR Code</string>
     <string name="action_qr_code">QR Code</string>
     <string name="title_activity_qr_code">QR Code</string>
     

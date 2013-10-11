@@ -91,7 +91,7 @@ public class Parser extends DefaultHandler {
 			throws SAXException {
 
 		if (qName.equalsIgnoreCase("app")) {
-			GlobalObjects.app = app;
+			GlobalObjects.setApp(app);
 		} else if (qName.equalsIgnoreCase("theme")) {
 			// add it to the list
 			app.setTheme(theme);

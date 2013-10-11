@@ -3,7 +3,6 @@
 		<property
 		    name="sigapp.app.name"
 		    value="simonkenyon" />
-		<property prefix="sigapp.app" file="appassets/${sigapp.app.name}/app.properties" />
 				
         <property
             name="sigapp.asset.dir"
@@ -31,49 +30,26 @@
                 
         <property
             name="share_subject.start"
-            value="&lt;string name=&quot;share_subject&quot;>" />
+            value="&lt;string name=&quot;pref_default_sharing_message&quot;>" />
         <property
             name="share_subject.end"
             value="&lt;/string>" />
         
-        <!-- substitute values in res/values/strings.xml -->
-        <replaceregexp
-            file="res/values/strings.xml"
-            match="${app_name.start}.*${app_name.end}"
-            replace="${app_name.start}${sigapp.app.app_name}${app_name.end}" />
-        <replaceregexp
-            file="res/values/strings.xml"
-            match="${share_url.start}.*${share_url.end}"
-            replace="${share_url.start}${sigapp.app.share_url}${share_url.end}" />
-        <replaceregexp
-            file="res/values/strings.xml"
-            match="${share_subject.start}.*${share_subject.end}"
-            replace="${share_subject.start}${sigapp.app.share_subject}${share_subject.end}" />
         
         <delete dir="${asset.dir}/app" />
 
         <copy
             failonerror="false" verbose="true" overwrite="true"
             todir="${asset.dir}/app" >
-
             <fileset dir="${sigapp.asset.dir}" >
-
                 <include name="app.xml" />
-
                 <include name="web/**/*.html" />
-
                 <include name="web/**/*.wiki" />
-
                 <include name="css/**/*.css" />
-
                 <include name="js/**/*.js" />
-
                 <include name="images/**/*.jpg" />
-
                 <include name="images/**/*.png" />
-
                 <include name="videos/**/*.avi" />
-
                 <include name="videos/**/*.mp4" />
             </fileset>
         </copy>
@@ -81,10 +57,10 @@
         <copy
             failonerror="false" verbose="true" overwrite="true"
             todir="${res.dir}">
-        
-            <fileset dir="${sigapp.asset.dir}/drawables" >
+            <fileset dir="${sigapp.asset.dir}/res" >
                 <include name="**/*.png" />
-            </fileset>
+                <include name="**/*.xml" />
+                </fileset>
         </copy>
 
     </target>

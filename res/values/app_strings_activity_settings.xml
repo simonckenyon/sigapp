@@ -1,0 +1,23 @@
+<resources>
+
+    <string name="pref_default_sharing_message">Information about Simon Kenyon</string>
+
+    <string-array name="pref_sharing_list_titles">
+        
+        <item>Mobile telephone number</item>
+        <item>Email address</item>
+        <item>Skype address</item>
+        <item>LinkedIn address</item>
+        <item>CV in pdf format</item>
+        <item>CV App on the Google Play Store</item>
+        </string-array>
+    <string-array name="pref_sharing_list_values">
+        <item>+353 86 240 0005</item>
+        <item>simon@koala.ie</item>
+        <item>simonckenyon</item>
+        <item>http://ie.linkedin.com/pub/simon-kenyon/0/6b2/744</item>
+        <item>https://www.dropbox.com/s/wd5b4lapgv8vl5z/Simon%20Kenyon.pdf</item>
+        <item>https://play.google.com/store/apps/details?id=ie.koala.sigapp.simonkenyon</item>
+    </string-array>
+
+</resources>

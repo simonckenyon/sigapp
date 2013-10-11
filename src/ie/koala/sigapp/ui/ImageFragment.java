@@ -80,7 +80,7 @@ public class ImageFragment extends SherlockFragment {
 		image = (ImageView) view.findViewById(R.id.image);
 		String img = null;
 		try {
-			img = GlobalObjects.app.getSectionAt(position).getImage();
+			img = GlobalObjects.getApp().getSectionAt(position).getImage();
 			Log.d(TAG, "onCreateView(): img=" + img);
 			AssetManager am = getResources().getAssets();
 			InputStream in_s;

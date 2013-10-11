@@ -80,7 +80,7 @@ public class VideoFragment extends SherlockFragment {
 		video = (VideoView) view.findViewById(R.id.video);
 		String videoFile = null;
 		try {
-			videoFile = GlobalObjects.app.getSectionAt(position).getVideo();
+			videoFile = GlobalObjects.getApp().getSectionAt(position).getVideo();
 			Log.d(TAG, "onCreateView(): videoFile=" + videoFile);
 			playVideo(activity, videoFile);
 		} catch (Exception e) {
