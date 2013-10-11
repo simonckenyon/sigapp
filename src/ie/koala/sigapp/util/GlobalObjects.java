@@ -3,21 +3,19 @@
  */
 package ie.koala.sigapp.util;
 
-import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.GoogleAnalytics;
-import com.google.analytics.tracking.android.MapBuilder;
-
+import ie.koala.sigapp.simonkenyon.R;
+import ie.koala.sigapp.xml.App;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.res.Resources;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import ie.koala.sigapp.simonkenyon.R;
-import ie.koala.sigapp.xml.App;
+
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.GoogleAnalytics;
+import com.google.analytics.tracking.android.MapBuilder;
 
 /**
  * @author simon
