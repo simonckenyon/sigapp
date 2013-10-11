@@ -2,7 +2,5 @@
 <resources>
 
     <string name="app_name">Skynet Labs</string>
-    <string name="share_url">http://www.skynetlabs.com/</string>
-    <string name="share">Share using#8230;</string>
 
 </resources>

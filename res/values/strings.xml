@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="share">Share using#8230;</string>
+    <string name="no_app_installed">No app installed that can handle this</string>
+    
     <string name="image_description">image</string>
     <string name="action_settings">Settings</string>
     <string name="description_qr_code">QR Code</string>

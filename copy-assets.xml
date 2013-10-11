@@ -14,28 +14,6 @@
             name="res.dir"
             location="res" />
         
-        <property
-            name="app_name.start"
-            value="&lt;string name=&quot;app_name&quot;>" />
-        <property
-            name="app_name.end"
-            value="&lt;/string>" />
-        
-        <property
-            name="share_url.start"
-            value="&lt;string name=&quot;share_url&quot;>" />
-        <property
-            name="share_url.end"
-            value="&lt;/string>" />
-                
-        <property
-            name="share_subject.start"
-            value="&lt;string name=&quot;pref_default_sharing_message&quot;>" />
-        <property
-            name="share_subject.end"
-            value="&lt;/string>" />
-        
-        
         <delete dir="${asset.dir}/app" />
 
         <copy

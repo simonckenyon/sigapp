@@ -1,6 +1,8 @@
 package ie.koala.sigapp.web;
 
+import ie.koala.sigapp.simonkenyon.R;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.net.Uri;
@@ -37,7 +39,11 @@ public class ViewClient extends WebViewClient {
 			// launch another Activity that handles URLs
 			Intent intent = new Intent(Intent.ACTION_VIEW, Uri
 					.parse(url));
+			try {
 			activity.startActivity(intent);
+			} catch (ActivityNotFoundException anfe) {
+				Toast.makeText(activity, activity.getResources().getText(R.string.no_app_installed), Toast.LENGTH_LONG).show();
+			}
 			return true;
 		}
 	}

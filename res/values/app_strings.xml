@@ -2,7 +2,5 @@
 <resources>
 
     <string name="app_name">Simon Kenyon</string>
-    <string name="share_url">https://play.google.com/store/apps/details?id=ie.koala.sigapp.simonkenyon</string>
-    <string name="share">Share using#8230;</string>
 
 </resources>
