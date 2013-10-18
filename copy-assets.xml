@@ -1,8 +1,7 @@
 <project default="version-info" >
     <target name="version-info" >
-		<property
-		    name="sigapp.app.name"
-		    value="simonkenyon" />
+
+		<property prefix="sigapp.app" file="appassets/app.properties" />
 				
         <property
             name="sigapp.asset.dir"

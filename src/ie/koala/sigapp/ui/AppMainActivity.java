@@ -176,8 +176,14 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 		// Fetch and store ShareActionProvider
 		mShareActionProvider = (ShareActionProvider) item.getActionProvider();
 		setShareIntent(getDefaultIntent());
+		
+		mShareActionProvider.setOnShareTargetSelectedListener (new ShareActionProvider.OnShareTargetSelectedListener() {
 
-		trackShare();
+			@Override
+			public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
+				trackShare(intent);
+				return false;
+			}});
 
 		// Return true to display menu
 		return true;
@@ -207,10 +213,15 @@ public class AppMainActivity extends SherlockFragmentActivity implements
 		return intent;
 	}
 
-	private void trackShare() {
+	private void trackShare(Intent intent) {
+		Bundle bundle = intent.getExtras();
+		String text = bundle.getString(Intent.EXTRA_TEXT);
+		if (text == null) {
+			text = "shared something";
+		}
 		if (GlobalObjects.isAnalyticsEnabled()) {
 			EasyTracker easyTracker = EasyTracker.getInstance(this);
-			easyTracker.send(MapBuilder.createEvent("ui_action", "button_press", "share_button", null).build());
+			easyTracker.send(MapBuilder.createEvent("ui_action", "button_press", "share_button:" + text, null).build());
 		}
 	}
 
