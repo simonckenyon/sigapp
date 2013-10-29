@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="TypographyDashes">
+
+    <!-- Replace placeholder ID with your tracking ID -->
+    <string name="apikey">AIzaSyC31ZfEDz9DR7glS5kwDNdYKYIg3v8TAAw</string>
+
+</resources>
