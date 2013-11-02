@@ -9,6 +9,6 @@
 ;LinkedIn profile
 : <a href="http://ie.linkedin.com/pub/simon-kenyon/0/6b2/744">http://ie.linkedin.com/pub/simon-kenyon/0/6b2/744</a></li>
 ;CV in PDF format
-:<a href="https://www.dropbox.com/s/wd5b4lapgv8vl5z/Simon%20Kenyon.pdf">https://www.dropbox.com/s/wd5b4lapgv8vl5z/Simon%20Kenyon.pdf</a>
+:<a href="https://www.dropbox.com/l/ZNBNfNuObsYOxQ57Pcchl9">https://www.dropbox.com/l/ZNBNfNuObsYOxQ57Pcchl9</a>
 ;CV App (this app) on the Google Play Store
 : <a href="https://play.google.com/store/apps/details?id=ie.koala.sigapp.simonkenyon">https://play.google.com/store/apps/details?id=ie.koala.sigapp.simonkenyon</a>
